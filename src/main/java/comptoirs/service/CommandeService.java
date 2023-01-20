@@ -70,15 +70,14 @@ public class CommandeService {
         // On vérifie que le client existe
         var commande = commandeDao.findById(commandeNum).orElseThrow();
         // On vérifie que la commande n'est pas déjà envoyée
-        if(commande.getEnvoyeele() == null){
-            commande.setEnvoyeele(LocalDate.now());
-            for(Ligne l : commande.getLignes()){
-                var prod = l.getProduit();
-                var qteAvant = prod.getUnitesEnStock();
-                prod.setUnitesEnStock(qteAvant - l.getQuantite());
-            }
-        }else{
+        if(commande.getEnvoyeele() != null) {
             throw new IllegalArgumentException("La commande a délà été envoyée");
+        }
+        commande.setEnvoyeele(LocalDate.now());
+        for(Ligne l : commande.getLignes()) {
+            var prod = l.getProduit();
+            var qteAvant = prod.getUnitesEnStock();
+            prod.setUnitesEnStock(qteAvant - l.getQuantite());
         }
         return commande;
     }
