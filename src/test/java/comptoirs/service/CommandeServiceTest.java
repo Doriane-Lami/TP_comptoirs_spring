@@ -40,5 +40,21 @@ class CommandeServiceTest {
         var commande = service.creerCommande(ID_PETIT_CLIENT);
         assertEquals(VILLE_PETIT_CLIENT, commande.getAdresseLivraison().getVille(),
             "On doit recopier l'adresse du client dans l'adresse de livraison");
-    }   
+    }
+
+    @Test
+    void testEnregistrerExpedition() {
+        var commande = service.creerCommande(ID_GROS_CLIENT);
+        commande = service.enregistreExpédition(commande.getNumero());
+        assertEquals(LocalDate.now(), commande.getEnvoyeele());
+    }
+
+    @Test
+    void EnregistreExpeditionCommandeDejaEnvoyee() {
+        var commande = service.creerCommande(ID_GROS_CLIENT);
+        service.enregistreExpédition(commande.getNumero());
+        // On ne peux pas enregistrer une commande deja expédiée
+        assertThrows(UnsupportedOperationException.class, () -> service.enregistreExpédition(commande.getNumero()));
+    }
+
 }
