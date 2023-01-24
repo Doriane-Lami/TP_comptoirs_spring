@@ -10,6 +10,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import jakarta.validation.ConstraintViolationException;
 
+import java.util.NoSuchElementException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -56,7 +58,7 @@ class LigneServiceTest {
     @Test
     void pasAjoutLigneDejaLivree(){
         // La commande ne doit pas être déjà envoyée
-        assertThrows(UnsupportedOperationException.class, () ->
+        assertThrows(IllegalArgumentException.class, () ->
                 service.ajouterLigne(NUMERO_COMMANDE_DEJA_LIVREE,98,1));
     }
 
@@ -64,7 +66,7 @@ class LigneServiceTest {
     void stockSuffisant(){
         // On doit avoir une quantité en stock du produit suffisante
         var ligne = service.ajouterLigne(NUMERO_COMMANDE_PAS_LIVREE, REFERENCE_PRODUIT_DISPONIBLE_1, 1);
-        assertTrue(ligne.getQuantite() > ligne.getProduit().getUnitesEnStock());
+        assertTrue(ligne.getQuantite() < ligne.getProduit().getUnitesEnStock());
     }
 
 }

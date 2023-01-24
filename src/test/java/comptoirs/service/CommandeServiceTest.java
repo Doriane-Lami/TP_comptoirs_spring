@@ -5,9 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
  // Ce test est basé sur le jeu de données dans "test_data.sql"
@@ -51,10 +51,10 @@ class CommandeServiceTest {
 
     @Test
     void EnregistreExpeditionCommandeDejaEnvoyee() {
+        // On ne peux pas enregistrer une commande deja expédiée
         var commande = service.creerCommande(ID_GROS_CLIENT);
         service.enregistreExpédition(commande.getNumero());
-        // On ne peux pas enregistrer une commande deja expédiée
-        assertThrows(UnsupportedOperationException.class, () -> service.enregistreExpédition(commande.getNumero()));
+        assertThrows(IllegalArgumentException.class, () -> service.enregistreExpédition(commande.getNumero()));
     }
 
 }
